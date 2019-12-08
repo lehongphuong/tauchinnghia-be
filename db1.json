@@ -1,0 +1,439 @@
+[
+{
+  "model": "dashboard.userdashboardmodule",
+  "pk": 1,
+  "fields": {
+    "title": "Quick links",
+    "module": "jet.dashboard.modules.LinkList",
+    "app_label": null,
+    "user": 1,
+    "column": 0,
+    "order": 0,
+    "settings": "{\"draggable\": false, \"deletable\": false, \"collapsible\": false, \"layout\": \"inline\"}",
+    "children": "[{\"title\": \"Return to site\", \"url\": \"/\"}, {\"title\": \"Change password\", \"url\": \"/admin/password_change/\"}, {\"title\": \"Log out\", \"url\": \"/admin/logout/\"}]",
+    "collapsed": false
+  }
+},
+{
+  "model": "dashboard.userdashboardmodule",
+  "pk": 2,
+  "fields": {
+    "title": "Applications",
+    "module": "jet.dashboard.modules.AppList",
+    "app_label": null,
+    "user": 1,
+    "column": 1,
+    "order": 0,
+    "settings": "{\"models\": null, \"exclude\": [\"auth.*\"]}",
+    "children": "",
+    "collapsed": false
+  }
+},
+{
+  "model": "dashboard.userdashboardmodule",
+  "pk": 3,
+  "fields": {
+    "title": "Administration",
+    "module": "jet.dashboard.modules.AppList",
+    "app_label": null,
+    "user": 1,
+    "column": 2,
+    "order": 0,
+    "settings": "{\"models\": [\"auth.*\"], \"exclude\": null}",
+    "children": "",
+    "collapsed": false
+  }
+},
+{
+  "model": "dashboard.userdashboardmodule",
+  "pk": 4,
+  "fields": {
+    "title": "Recent Actions",
+    "module": "jet.dashboard.modules.RecentActions",
+    "app_label": null,
+    "user": 1,
+    "column": 0,
+    "order": 1,
+    "settings": "{\"limit\": 10, \"include_list\": null, \"exclude_list\": null, \"user\": null}",
+    "children": "",
+    "collapsed": false
+  }
+},
+{
+  "model": "dashboard.userdashboardmodule",
+  "pk": 5,
+  "fields": {
+    "title": "Latest Django News",
+    "module": "jet.dashboard.modules.Feed",
+    "app_label": null,
+    "user": 1,
+    "column": 1,
+    "order": 1,
+    "settings": "{\"feed_url\": \"http://www.djangoproject.com/rss/weblog/\", \"limit\": 5}",
+    "children": "",
+    "collapsed": false
+  }
+},
+{
+  "model": "dashboard.userdashboardmodule",
+  "pk": 6,
+  "fields": {
+    "title": "Support",
+    "module": "jet.dashboard.modules.LinkList",
+    "app_label": null,
+    "user": 1,
+    "column": 2,
+    "order": 1,
+    "settings": "{\"draggable\": true, \"deletable\": true, \"collapsible\": true, \"layout\": \"stacked\"}",
+    "children": "[{\"title\": \"Django documentation\", \"url\": \"http://docs.djangoproject.com/\", \"external\": true}, {\"title\": \"Django \\\"django-users\\\" mailing list\", \"url\": \"http://groups.google.com/group/django-users\", \"external\": true}, {\"title\": \"Django irc channel\", \"url\": \"irc://irc.freenode.net/django\", \"external\": true}]",
+    "collapsed": false
+  }
+},
+{
+  "model": "dashboard.userdashboardmodule",
+  "pk": 7,
+  "fields": {
+    "title": "Application models",
+    "module": "jet.dashboard.modules.ModelList",
+    "app_label": "herokuapp",
+    "user": 1,
+    "column": 0,
+    "order": 0,
+    "settings": "{\"models\": [\"herokuapp.*\"], \"exclude\": null}",
+    "children": "",
+    "collapsed": false
+  }
+},
+{
+  "model": "dashboard.userdashboardmodule",
+  "pk": 8,
+  "fields": {
+    "title": "Recent Actions",
+    "module": "jet.dashboard.modules.RecentActions",
+    "app_label": "herokuapp",
+    "user": 1,
+    "column": 1,
+    "order": 0,
+    "settings": "{\"limit\": 10, \"include_list\": [\"herokuapp.*\"], \"exclude_list\": null, \"user\": null}",
+    "children": "",
+    "collapsed": false
+  }
+},
+{
+  "model": "auth.user",
+  "pk": 1,
+  "fields": {
+    "password": "pbkdf2_sha256$150000$uBasRd6aHs3F$WvthnLP69ZBUWACfeV85sfcGUQJ60L7YLuJF4oFTpB8=",
+    "last_login": "2019-08-16T00:23:51.637Z",
+    "is_superuser": true,
+    "username": "admin",
+    "first_name": "",
+    "last_name": "",
+    "email": "a@gmail.com",
+    "is_staff": true,
+    "is_active": true,
+    "date_joined": "2019-08-16T00:22:50.169Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "j62k16mdop1958lfy8tlrmfe89xmktn9",
+  "fields": {
+    "session_data": "MTVmMjQ4Yjk3OWM2MDM0N2VmMzgyYjgyMjg5YmZkZjg2NjY0NjNhZDp7Il9hdXRoX3VzZXJfaWQiOiIxIiwiX2F1dGhfdXNlcl9iYWNrZW5kIjoiZGphbmdvLmNvbnRyaWIuYXV0aC5iYWNrZW5kcy5Nb2RlbEJhY2tlbmQiLCJfYXV0aF91c2VyX2hhc2giOiI3YTFhNzUxNmQ5MDA0YjBkODQzM2I2YTkxZmQyZTcwOWYzN2Y5YjNiIn0=",
+    "expire_date": "2019-08-30T00:23:51.650Z"
+  }
+},
+{
+  "model": "herokuapp.company",
+  "pk": 1,
+  "fields": {
+    "id_parent": 0,
+    "username": "phuonglh5",
+    "password": "1",
+    "name": "Nguyen thanh trung",
+    "phone": "0379558185",
+    "born": "1993-09-07",
+    "address": "FPT complex Nam k\u1ef3 kh\u1edfi ngh\u0129a, Ng\u0169 h\u00e0nh s\u01a1n, Qu\u1ea3ng Ng\u00e3i"
+  }
+},
+{
+  "model": "herokuapp.user",
+  "pk": 1,
+  "fields": {
+    "company": 1,
+    "name": "L\u00ea H\u1ed3ng Ph\u01b0\u01a1ng",
+    "phone": "123",
+    "cmnd": "212793692",
+    "address": "dk",
+    "born": "1992-07-09"
+  }
+},
+{
+  "model": "herokuapp.train",
+  "pk": 1,
+  "fields": {
+    "name": "Super Bi\u1ec3n \u0110\u00f4ng",
+    "total_seat": 152
+  }
+},
+{
+  "model": "herokuapp.train",
+  "pk": 2,
+  "fields": {
+    "name": "Super 2 Bi\u1ec3n \u0110\u00f4ng",
+    "total_seat": 139
+  }
+},
+{
+  "model": "herokuapp.trip",
+  "pk": 1,
+  "fields": {
+    "train": 1,
+    "start_date": "2019-08-16",
+    "start_time_train": "09:00:00",
+    "end_time_train": "09:30:00",
+    "type_ticket": 0
+  }
+},
+{
+  "model": "herokuapp.trip",
+  "pk": 2,
+  "fields": {
+    "train": 2,
+    "start_date": "2019-08-16",
+    "start_time_train": "09:30:00",
+    "end_time_train": "10:05:00",
+    "type_ticket": 0
+  }
+},
+{
+  "model": "herokuapp.trip",
+  "pk": 3,
+  "fields": {
+    "train": 1,
+    "start_date": "2019-08-17",
+    "start_time_train": "09:30:00",
+    "end_time_train": "10:45:00",
+    "type_ticket": 0
+  }
+},
+{
+  "model": "herokuapp.ticket",
+  "pk": 1,
+  "fields": {
+    "company": 1,
+    "train": 1,
+    "trip": 1,
+    "user": 1,
+    "number_seat": 18,
+    "is_debt": false,
+    "start_date": "2019-08-16",
+    "status": 0,
+    "pay_type": 0,
+    "price": 170000.0,
+    "time_check_in": "2019-08-16T01:23:24.932Z",
+    "role": 0
+  }
+},
+{
+  "model": "herokuapp.ticket",
+  "pk": 2,
+  "fields": {
+    "company": 1,
+    "train": 1,
+    "trip": 1,
+    "user": 1,
+    "number_seat": 17,
+    "is_debt": false,
+    "start_date": "2019-08-16",
+    "status": 0,
+    "pay_type": 0,
+    "price": 170000.0,
+    "time_check_in": "2019-08-16T01:25:26.191Z",
+    "role": 0
+  }
+},
+{
+  "model": "herokuapp.priceticket",
+  "pk": 1,
+  "fields": {
+    "company": 1,
+    "trip": 1,
+    "price_origin": 140000.0,
+    "price": 170000.0
+  }
+},
+{
+  "model": "herokuapp.priceticket",
+  "pk": 2,
+  "fields": {
+    "company": 1,
+    "trip": 2,
+    "price_origin": 50000.0,
+    "price": 178000.0
+  }
+},
+{
+  "model": "herokuapp.priceticket",
+  "pk": 3,
+  "fields": {
+    "company": 1,
+    "trip": 3,
+    "price_origin": 50000.0,
+    "price": 90000.0
+  }
+},
+{
+  "model": "herokuapp.point",
+  "pk": 1,
+  "fields": {
+    "user": 1,
+    "coin": 2
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 1,
+  "fields": {
+    "action_time": "2019-08-16T00:24:08.124Z",
+    "user": 1,
+    "content_type": 10,
+    "object_id": "1",
+    "object_repr": "Company object (1)",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 2,
+  "fields": {
+    "action_time": "2019-08-16T00:30:24.988Z",
+    "user": 1,
+    "content_type": 11,
+    "object_id": "1",
+    "object_repr": "Train object (1)",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 3,
+  "fields": {
+    "action_time": "2019-08-16T00:31:37.018Z",
+    "user": 1,
+    "content_type": 11,
+    "object_id": "2",
+    "object_repr": "Train object (2)",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 4,
+  "fields": {
+    "action_time": "2019-08-16T00:32:16.159Z",
+    "user": 1,
+    "content_type": 13,
+    "object_id": "1",
+    "object_repr": "Trip object (1)",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 5,
+  "fields": {
+    "action_time": "2019-08-16T00:32:33.411Z",
+    "user": 1,
+    "content_type": 16,
+    "object_id": "1",
+    "object_repr": "PriceTicket object (1)",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 6,
+  "fields": {
+    "action_time": "2019-08-16T00:33:11.143Z",
+    "user": 1,
+    "content_type": 13,
+    "object_id": "2",
+    "object_repr": "Trip object (2)",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 7,
+  "fields": {
+    "action_time": "2019-08-16T00:33:20.345Z",
+    "user": 1,
+    "content_type": 16,
+    "object_id": "2",
+    "object_repr": "PriceTicket object (2)",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 8,
+  "fields": {
+    "action_time": "2019-08-16T01:08:11.149Z",
+    "user": 1,
+    "content_type": 11,
+    "object_id": "1",
+    "object_repr": "Train object (1)",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"total_seat\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 9,
+  "fields": {
+    "action_time": "2019-08-16T01:09:01.054Z",
+    "user": 1,
+    "content_type": 11,
+    "object_id": "1",
+    "object_repr": "Train object (1)",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"total_seat\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 10,
+  "fields": {
+    "action_time": "2019-08-16T01:47:18.614Z",
+    "user": 1,
+    "content_type": 13,
+    "object_id": "3",
+    "object_repr": "Trip object (3)",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 11,
+  "fields": {
+    "action_time": "2019-08-16T01:47:24.775Z",
+    "user": 1,
+    "content_type": 16,
+    "object_id": "3",
+    "object_repr": "PriceTicket object (3)",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+}
+]
