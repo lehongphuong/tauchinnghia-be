@@ -737,6 +737,7 @@ def updateDataTrip(request, format=None):
 # get delete data from Trip
 def deleteDataTrip(request, format=None):
     data = json.loads(json.dumps(request.data))
+    data['company'] = models.Company.objects.get(pk=data['company'])
     models.Trip(**data).delete()
     return Response({"result": "ok"})
 
