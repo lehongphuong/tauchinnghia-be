@@ -55,12 +55,12 @@ def executeQuery(sql):
 @parser_classes((JSONParser,))
 # get all data from User
 def sendMail(request, format=None):
-    # data = json.loads(json.dumps(request.data))
+    data = json.loads(json.dumps(request.data))
 
     send_mail(
         'Subject here',
         'Here is the message.',
-        'helloitpdu@gmail.com',
+        'No Reply',
         ['helloitpdu@gmail.com'],
         fail_silently=False,
     )

@@ -93,7 +93,7 @@ TEMPLATES = [
 ]
  
 WSGI_APPLICATION = 'djangoherokuapp.wsgi.application'
-
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
