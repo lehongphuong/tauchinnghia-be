@@ -5,8 +5,15 @@ app_name = 'home'
 urlpatterns = [
     path('', views.index, name='index'),
     # *******************************************************
+    # begin ultil
+    path('sendMail', views.sendMail, name='sendMail'), 
+    # end ultil
+    # *******************************************************
+
+    # *******************************************************
     # begin User
     path('createDataUser', views.createDataUser, name='createDataUser'),
+    path('createDataUserBooking', views.createDataUserBooking, name='createDataUserBooking'),
     path('readDataUser', views.readDataUser, name='readDataUser'),
     path('updateDataUser', views.updateDataUser, name='updateDataUser'),
     path('deleteDataUser', views.deleteDataUser, name='deleteDataUser'),
@@ -14,6 +21,18 @@ urlpatterns = [
     path('searchDataUserOfCompany', views.searchDataUserOfCompany,
          name='searchDataUserOfCompany'),
     # end User
+    # *******************************************************
+
+    # *******************************************************
+    # begin Booking
+    path('createDataBooking', views.createDataBooking, name='createDataBooking'), 
+    path('readDataBooking', views.readDataBooking, name='readDataBooking'),
+    path('updateDataBooking', views.updateDataBooking, name='updateDataBooking'),
+    path('deleteDataBooking', views.deleteDataBooking, name='deleteDataBooking'),
+    path('findDataBooking', views.findDataBooking, name='findDataBooking'),
+    path('searchDataBookingOfCompany', views.searchDataBookingOfCompany,
+         name='searchDataBookingOfCompany'),
+    # end Booking
     # *******************************************************
 
     # *******************************************************

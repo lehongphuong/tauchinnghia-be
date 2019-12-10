@@ -22,6 +22,7 @@ class User(models.Model):
     name = models.CharField(max_length=50)
     phone = models.CharField(max_length=20)
     cmnd = models.CharField(max_length=10)
+    email = models.CharField(max_length=50)
     address = models.CharField(max_length=200)
     born = models.DateField()
 
@@ -44,12 +45,24 @@ class Trip(models.Model):
     price = models.FloatField(max_length=20)
 
 
+class Booking(models.Model):
+    id = models.AutoField
+    trip = models.ForeignKey(Trip, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    number_ticket = models.IntegerField(default=0)
+    coupon = models.CharField(max_length=10) 
+    payment_type = models.IntegerField(default=0)
+    payment_status = models.IntegerField(default=0)
+    start_date = models.DateField()
+        
+
 class Ticket(models.Model):
     id = models.AutoField
     company = models.ForeignKey(Company, on_delete=models.CASCADE)
     train = models.ForeignKey(Train, on_delete=models.CASCADE)
     trip = models.ForeignKey(Trip, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    booking = models.ForeignKey(Booking, on_delete=models.CASCADE)
     number_seat = models.IntegerField(default=0)
     is_debt = models.BooleanField(default=False)
     start_date = models.DateField()
@@ -99,4 +112,4 @@ class Staff(models.Model):
 class Point(models.Model):
     id = models.AutoField
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    coin = models.IntegerField(default=0)
+    coin = models.IntegerField(default=0) 

@@ -9,13 +9,18 @@ class UserAdmin(admin.ModelAdmin):
     list_filter = ['id', 'name', 'phone', 'cmnd', 'address', 'born']
     search_fields = ['id', 'name', 'phone', 'cmnd', 'address', 'born']
 
+class BookingAdmin(admin.ModelAdmin):
+    list_display = ('id', 'trip', 'user', 'number_ticket', 'coupon', 'payment_type', 'payment_status', 'start_date')
+    list_filter = ('id', 'trip', 'user', 'number_ticket', 'coupon', 'payment_type', 'payment_status', 'start_date')
+    search_fields = ('id', 'trip', 'user', 'number_ticket', 'coupon', 'payment_type', 'payment_status', 'start_date')
+
 
 class TicketAdmin(admin.ModelAdmin):
-    list_display = ('id', 'train', 'trip', 'user', 'number_seat',
+    list_display = ('id', 'train', 'trip', 'user', 'booking', 'number_seat',
                     'is_debt', 'start_date', 'status', 'pay_type', 'price_origin', 'price', 'time_check_in', 'role')
-    list_filter = ('id', 'train', 'trip', 'user', 'number_seat',
+    list_filter = ('id', 'train', 'trip', 'user', 'booking', 'number_seat',
                    'is_debt', 'start_date', 'status', 'pay_type', 'price_origin', 'price', 'time_check_in', 'role')
-    search_fields = ('id', 'train', 'trip', 'user', 'pay_type', 'number_seat',
+    search_fields = ('id', 'train', 'trip', 'user', 'pay_type', 'booking', 'number_seat',
                      'is_debt', 'start_date', 'status', 'price_origin', 'price', 'time_check_in', 'role')
 
 
@@ -67,10 +72,11 @@ class StaffAdmin(admin.ModelAdmin):
 class PointAdmin(admin.ModelAdmin):
     list_display = ('id', 'user', 'coin')
     list_filter = ('id', 'user', 'coin')
-    search_fields = ('id', 'user', 'coin')
+    search_fields = ('id', 'user', 'coin')  
 
 
 admin.site.register(models.User, UserAdmin)
+admin.site.register(models.Booking, BookingAdmin)
 admin.site.register(models.Ticket, TicketAdmin)
 admin.site.register(models.Train, TrainAdmin)
 admin.site.register(models.Debt, DebtAdmin)

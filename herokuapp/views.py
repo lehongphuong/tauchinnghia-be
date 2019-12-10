@@ -11,10 +11,10 @@ from rest_framework.decorators import parser_classes
 from rest_framework.parsers import JSONParser
 from rest_framework.response import Response
 from django.http import JsonResponse
-
 from django.core import serializers
-
 import json
+
+from django.core.mail import send_mail
 
 # from models import User
 from . import models
@@ -54,19 +54,59 @@ def executeQuery(sql):
 @api_view(['POST'])
 @parser_classes((JSONParser,))
 # get all data from User
+def sendMail(request, format=None):
+    # data = json.loads(json.dumps(request.data))
+
+    send_mail(
+        'Subject here',
+        'Here is the message.',
+        'helloitpdu@gmail.com',
+        ['helloitpdu@gmail.com'],
+        fail_silently=False,
+    )
+
+    return Response([{"id": '0', "result": "ok"}])
+ 
+# end User
+# *********************************************
+
+
+# *********************************************
+# begin User
+@api_view(['POST'])
+@parser_classes((JSONParser,))
+# get all data from User
 def createDataUser(request, format=None):
     data = json.loads(json.dumps(request.data))
     # check user exists by phone or CMND
-    countPhone = models.User.objects.filter(phone=data['phone']).count()
-    countCmnd = models.User.objects.filter(cmnd=data['cmnd']).count()
-    print(countPhone, countCmnd)
-    if countPhone == 0 and countCmnd == 0:
+    phone = models.User.objects.filter(phone=data['phone'])
+    cmnd = models.User.objects.filter(cmnd=data['cmnd']) 
+
+    if phone.count() == 0 and cmnd.count() == 0:
         data['company'] = models.Company.objects.get(pk=data['company'])
         obj = models.User(**data)
         obj.save()
         return Response([{"id": obj.id, "result": "ok"}])
 
-    return Response([{"id": "0", "result": "ok"}])
+    return Response([{"id": '0', "result": "ok"}])
+
+
+@api_view(['POST'])
+@parser_classes((JSONParser,))
+# get all data from User Booking
+def createDataUserBooking(request, format=None):
+    data = json.loads(json.dumps(request.data))
+    # check user exists by phone or CMND
+    phone = models.User.objects.filter(phone=data['phone'])
+    cmnd = models.User.objects.filter(cmnd=data['cmnd']) 
+
+    if phone.count() == 0 and cmnd.count() == 0:
+        data['company'] = models.Company.objects.get(pk=data['company'])
+        obj = models.User(**data)
+        obj.save()
+        return Response([{"id": obj.id, "result": "ok"}])
+
+    return Response([{"id": cmnd[0].pk, "result": "ok"}])
 
 
 @api_view(['POST'])
@@ -109,6 +149,64 @@ def searchDataUserOfCompany(request, format=None):
     return Response(serializers.serialize("json", models.User.objects.filter(company=request.data['company'])))
 
 # end User
+# *********************************************
+
+
+# *********************************************
+# begin Booking
+@api_view(['POST'])
+@parser_classes((JSONParser,))
+# get all data from Booking
+def createDataBooking(request, format=None):
+    data = json.loads(json.dumps(request.data)) 
+    data['trip'] = models.Trip.objects.get(pk=data['trip']) 
+    data['user'] = models.User.objects.get(pk=data['user']) 
+    obj = models.Booking(**data)
+    obj.save()
+    return Response([{"id": obj.id, "result": "ok"}])
+
+
+@api_view(['POST'])
+@parser_classes((JSONParser,))
+# get all data from Booking
+def readDataBooking(request, format=None):
+    return Response(serializers.serialize("json", models.Booking.objects.all()))
+
+
+@api_view(['POST'])
+@parser_classes((JSONParser,))
+# get update data from Booking
+def updateDataBooking(request, format=None):
+    data = json.loads(json.dumps(request.data))
+    data['trip'] = models.Trip.objects.get(pk=data['trip']) 
+    data['user'] = models.User.objects.get(pk=data['user'])
+    models.Booking(**data).save()
+    return Response({"result": "ok"})
+
+
+@api_view(['POST'])
+@parser_classes((JSONParser,))
+# get delete data from Booking
+def deleteDataBooking(request, format=None):
+    data = json.loads(json.dumps(request.data))
+    models.Booking(**data).delete()
+    return Response({"result": "ok"})
+
+
+@api_view(['POST'])
+@parser_classes((JSONParser,))
+# get delete data from Booking
+def findDataBooking(request, format=None):
+    return Response(serializers.serialize("json", models.Booking.objects.filter(pk=request.data['pk'])))
+
+
+@api_view(['POST'])
+@parser_classes((JSONParser,))
+# get data Booking of company
+def searchDataBookingOfCompany(request, format=None):
+    return Response(serializers.serialize("json", models.Booking.objects.filter(user=request.data['user'])))
+
+# end Booking
 # *********************************************
 
 # *********************************************
@@ -718,8 +816,7 @@ def createDataTrip(request, format=None):
 @api_view(['POST'])
 @parser_classes((JSONParser,))
 # get all data from Trip
-def readDataTrip(request, format=None):
-    
+def readDataTrip(request, format=None): 
     return Response(serializers.serialize("json", models.Trip.objects.all().order_by('-id')))
 
 
