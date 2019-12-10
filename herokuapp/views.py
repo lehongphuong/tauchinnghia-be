@@ -15,6 +15,7 @@ from django.core import serializers
 import json
 
 from django.core.mail import send_mail
+from django.core.mail import EmailMultiAlternatives
 
 # from models import User
 from . import models
@@ -55,17 +56,14 @@ def executeQuery(sql):
 @parser_classes((JSONParser,))
 # get all data from User
 def sendMail(request, format=None):
-    data = json.loads(json.dumps(request.data))
-
-    send_mail(
-        'Subject here',
-        'Here is the message.',
-        'lehongphuongcntt@gmail.com',
-        ['helloitpdu@gmail.com'],
-        fail_silently=False,
-    )
-
-    return Response([{"id": '0', "result": "ok"}])
+    data = json.loads(json.dumps(request.data)) 
+    subject, from_email, to = 'Vé Tàu Lý Sơn - IziShip', 'Vé tàu Đảo Lý Sơn<vetaudaolyson@gmail.com>', data['to']
+    text_content = 'Đây là tin nhắn quan trọng.'
+    html_content = data['content']
+    msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
+    msg.attach_alternative(html_content, "text/html")
+    msg.send()  
+    return Response([{"result": "ok"}])
  
 # end User
 # *********************************************
