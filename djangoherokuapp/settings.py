@@ -93,6 +93,14 @@ TEMPLATES = [
 ]
  
 WSGI_APPLICATION = 'djangoherokuapp.wsgi.application'
+# Email settings
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'lehongphuongcntt@gmail.com'
+EMAIL_HOST_PASSWORD = 'Professionaltools'
+EMAIL_USE_TLS = True
+EMAIL_USE_SSL = True
+EMAIL_PORT = '587'
+
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 # Database

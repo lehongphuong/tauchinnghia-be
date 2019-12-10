@@ -60,7 +60,7 @@ def sendMail(request, format=None):
     send_mail(
         'Subject here',
         'Here is the message.',
-        'No Reply',
+        'lehongphuongcntt@gmail.com',
         ['helloitpdu@gmail.com'],
         fail_silently=False,
     )
