@@ -38,8 +38,10 @@ urlpatterns = [
     # *******************************************************
     # begin Ticket
     path('createDataTicket', views.createDataTicket, name='createDataTicket'),
+    path('createDataTicketAuto', views.createDataTicketAuto, name='createDataTicketAuto'),
     path('readDataTicket', views.readDataTicket, name='readDataTicket'),
     path('updateDataTicket', views.updateDataTicket, name='updateDataTicket'),
+    path('updateStatusDataTicket', views.updateStatusDataTicket, name='updateStatusDataTicket'),
     path('deleteDataTicket', views.deleteDataTicket, name='deleteDataTicket'),
     path('findDataTicket', views.findDataTicket, name='findDataTicket'),
     path('searchDataTicketOrder', views.searchDataTicketOrder,
@@ -54,6 +56,8 @@ urlpatterns = [
          name='searchDataTicketByCondition1'),
     path('searchDataTicketByCondition2', views.searchDataTicketByCondition2,
          name='searchDataTicketByCondition2'),
+    path('searchDataTicketByCondition3', views.searchDataTicketByCondition3,
+         name='searchDataTicketByCondition3'),
     path('searchDataTicketStatic', views.searchDataTicketStatic,
          name='searchDataTicketStatic'),
     path('updateDataTicketChangeOneTicket', views.updateDataTicketChangeOneTicket,
@@ -124,6 +128,7 @@ urlpatterns = [
     path('deleteDataTrip', views.deleteDataTrip, name='deleteDataTrip'),
     path('findDataTrip', views.findDataTrip, name='findDataTrip'),
     path('findDataTripByDate', views.findDataTripByDate, name='findDataTripByDate'),
+    path('get_all_trip_and_number_seat_by_date', views.get_all_trip_and_number_seat_by_date, name='get_all_trip_and_number_seat_by_date'),
     path('createDataTripFromExcel', views.createDataTripFromExcel, name='createDataTripFromExcel'),
     # end Trip
     # *******************************************************

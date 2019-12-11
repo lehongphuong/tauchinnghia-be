@@ -96,14 +96,17 @@ def createDataUserBooking(request, format=None):
     data = json.loads(json.dumps(request.data))
     # check user exists by phone or CMND
     phone = models.User.objects.filter(phone=data['phone'])
-    cmnd = models.User.objects.filter(cmnd=data['cmnd']) 
+    cmnd = models.User.objects.filter(cmnd=data['cmnd'])  
 
     if phone.count() == 0 and cmnd.count() == 0:
         data['company'] = models.Company.objects.get(pk=data['company'])
         obj = models.User(**data)
-        obj.save()
+        obj.save() 
         return Response([{"id": obj.id, "result": "ok"}])
 
+    if cmnd.count() == 0:
+        cmnd = phone 
+        
     return Response([{"id": cmnd[0].pk, "result": "ok"}])
 
 
@@ -211,10 +214,11 @@ def searchDataBookingOfCompany(request, format=None):
 # begin Ticket
 @api_view(['POST'])
 @parser_classes((JSONParser,))
-# get all data from Ticket
+# create data from Ticket
 def createDataTicket(request, format=None):
     data = json.loads(json.dumps(request.data))
     data['company'] = models.Company.objects.get(pk=data['company'])
+    data['booking'] = models.Booking.objects.get(pk=data['booking'])
     data['trip'] = models.Trip.objects.get(pk=data['trip'])
     data['train'] = models.Train.objects.get(pk=data['train'])
     data['user'] = models.User.objects.get(pk=data['user'])
@@ -222,6 +226,56 @@ def createDataTicket(request, format=None):
     obj.save()
     return Response([{"id": obj.id, "result": "ok"}])
 
+
+@api_view(['POST'])
+@parser_classes((JSONParser,))
+# create data Ticket Auto
+def createDataTicketAuto(request, format=None):
+    data = json.loads(json.dumps(request.data))
+
+    # get number seat from train
+    sql = "SELECT herokuapp_Train.total_seat  FROM herokuapp_Train"
+    sql = sql.strip() + " WHERE id = %s" % (data[0]['train'])
+    total_seat = executeQuery(sql)[0]['total_seat']
+    # print(total_seat)
+
+    # get ticket by trip
+    sql = "SELECT herokuapp_Ticket.number_seat FROM herokuapp_Ticket"
+    sql = sql.strip() + " WHERE trip_id = %s" % (data[0]['trip'])
+    sql = sql.strip() + " AND start_date = '%s'" % (data[0]['start_date'])
+    tickets_book = executeQuery(sql)
+
+    # loop in data ticket prepare insert 
+    booked_list = [0]*total_seat
+    # đánh dấu các ghế được book = 1
+    for book in tickets_book:
+        booked_list[book['number_seat']] = 1
+    
+    ans = 1
+    for ticket in data: 
+        for i in range(ans, total_seat):
+            # nếu ghế chưa được đặt thì sẽ chọn ghế
+            if(booked_list[i] == 0):
+                ans = i + 1
+                ticket['number_seat'] = i
+                break
+
+    # print(data) 
+    id_tickets = []
+    for item in data: 
+        # check and update number_seat and insert ticket 
+        item['company'] = models.Company.objects.get(pk=item['company'])
+        item['booking'] = models.Booking.objects.get(pk=item['booking'])
+        item['trip'] = models.Trip.objects.get(pk=item['trip'])
+        item['train'] = models.Train.objects.get(pk=item['train'])
+        item['user'] = models.User.objects.get(pk=item['user'])
+        obj = models.Ticket(**item)
+        obj.save()
+
+        # save id of ticket insert 
+        id_tickets.append(obj.id)
+
+    return Response([{"id": id_tickets, "result": "ok"}]) 
 
 @api_view(['POST'])
 @parser_classes((JSONParser,))
@@ -240,6 +294,17 @@ def updateDataTicket(request, format=None):
     data['trip'] = models.Trip.objects.get(pk=data['trip'])
     data['user'] = models.User.objects.get(pk=data['user'])
     models.Ticket(**data).save()
+    return Response({"result": "ok"})
+
+
+@api_view(['POST'])
+@parser_classes((JSONParser,))
+# get update status of ticket
+def updateStatusDataTicket(request, format=None):
+    data = json.loads(json.dumps(request.data))
+    ticket = models.Ticket.objects.filter(pk=request.data['pk'])
+    # vé đã thanh toán
+    ticket.update(status=3) 
     return Response({"result": "ok"})
 
 
@@ -287,8 +352,7 @@ def searchDataTicketOfCompany(request, format=None):
 @api_view(['POST'])
 @parser_classes((JSONParser,))
 # get data Ticket of company
-def searchDataTicketByCondition(request, format=None):
-
+def searchDataTicketByCondition(request, format=None): 
     print(request.data)
     data = ""
     # ID
@@ -326,8 +390,10 @@ def searchDataTicketByCondition1(request, format=None):
     sql = sql.strip() + " INNER JOIN herokuapp_User on herokuapp_Ticket.user_id = herokuapp_User.id"
     sql = sql.strip() + " INNER JOIN herokuapp_Trip on herokuapp_Ticket.trip_id = herokuapp_Trip.id"
     sql = sql.strip() + \
-        " WHERE herokuapp_Ticket.company_id = %s" % (
-            request.data['company'])
+        " WHERE herokuapp_Ticket.company_id = %s" % (request.data['company'])
+
+    # (0,1,2,3) vé giử, vé đã mua, vé đã dùng, book online đã thanh toán
+    sql = sql.strip() + " AND herokuapp_Ticket.status in(0,1,2,3)"
 
     # ID
     if(request.data['type'] == '0'):
@@ -404,6 +470,51 @@ def searchDataTicketByCondition2(request, format=None):
                 " AND herokuapp_User.phone = '%s'" % (request.data['phone'])
 
     sql = sql.strip() + " ORDER BY herokuapp_Ticket.id desc"
+
+    return Response(executeQuery(sql))
+
+
+@api_view(['POST'])
+@parser_classes((JSONParser,))
+# get search data from Ticket is order with train, trip quản lý vé đặt online
+def searchDataTicketByCondition3(request, format=None):
+    sql = "SELECT herokuapp_Ticket.*, herokuapp_Ticket.id ticket, herokuapp_Train.name trainname, herokuapp_User.*, herokuapp_Trip.* FROM herokuapp_Ticket"
+    sql = sql.strip() + \
+        " INNER JOIN herokuapp_Train on herokuapp_Ticket.train_id = herokuapp_Train.id"
+    sql = sql.strip() + " INNER JOIN herokuapp_User on herokuapp_Ticket.user_id = herokuapp_User.id"
+    sql = sql.strip() + " INNER JOIN herokuapp_Trip on herokuapp_Ticket.trip_id = herokuapp_Trip.id"
+    sql = sql.strip() + \
+        " WHERE herokuapp_Ticket.company_id = %s" % (request.data['company'])
+
+    # (4) book online chưa thanh toán
+    sql = sql.strip() + " AND herokuapp_Ticket.status in(4)"
+
+    # ID
+    if(request.data['type'] == '0'):
+        sql = sql.strip() + \
+            " AND herokuapp_Ticket.id = '%s'" % (request.data['value'])
+
+    # CMND
+    if(request.data['type'] == '1'):
+        sql = sql.strip() + \
+            " AND herokuapp_User.cmnd = '%s'" % (request.data['value'])
+
+    # SDT
+    if(request.data['type'] == '2'):
+        sql = sql.strip() + \
+            " AND herokuapp_User.phone = '%s'" % (request.data['value'])
+
+    # Họ và tên
+    if(request.data['type'] == '3'):
+        sql = sql.strip() + \
+            " AND herokuapp_User.name = like'%%s%'" % (request.data['value'])
+
+    sql = sql.strip() + \
+        " AND herokuapp_Ticket.start_date = '%s'" % (
+            request.data['start_date'])
+    sql = sql.strip() + " ORDER BY herokuapp_Ticket.id desc"
+
+    print(sql)
 
     return Response(executeQuery(sql))
 
@@ -562,7 +673,7 @@ def updateDataTicketChangeManyTicket(request, format=None):
                 break
 
     return Response([{"result": "ok"}])
-
+ 
 
 @api_view(['POST'])
 @parser_classes((JSONParser,))
@@ -834,7 +945,7 @@ def deleteDataTrip(request, format=None):
     data = json.loads(json.dumps(request.data))
     data['company'] = models.Company.objects.get(pk=data['company'])
     data['train'] = models.Train.objects.get(pk=data['train'])
-    models.Trip(**data).delete()
+    models.Trip(**data).delete() 
     return Response({"result": "ok"})
 
 
@@ -850,6 +961,34 @@ def findDataTrip(request, format=None):
 # find data trip by date
 def findDataTripByDate(request, format=None):
     return Response(serializers.serialize("json", models.Trip.objects.filter(start_date=request.data['start_date']).order_by('start_time_train')))
+
+
+@api_view(['POST'])
+@parser_classes((JSONParser,))
+# get all trip and number seat by date
+def get_all_trip_and_number_seat_by_date(request, format=None):
+    data = json.loads(json.dumps(request.data)) 
+    sql = "SELECT herokuapp_Trip.*, herokuapp_Train.total_seat, count(herokuapp_Ticket.trip_id) number_book FROM herokuapp_Trip"
+    sql = sql.strip() + " INNER JOIN herokuapp_Train ON herokuapp_Trip.train_id = herokuapp_Train.id"
+    sql = sql.strip() + " INNER JOIN herokuapp_Ticket ON herokuapp_Trip.id = herokuapp_Ticket.trip_id"
+    sql = sql.strip() + " WHERE herokuapp_Trip.start_date = '%s'" % (data['start_date'])
+    sql = sql.strip() + " GROUP BY herokuapp_Ticket.trip_id"
+    sql = sql.strip() + " ORDER BY start_time_train asc"  
+    return Response(executeQuery(sql))
+
+
+@api_view(['POST'])
+@parser_classes((JSONParser,))
+# get all trip and number seat by date
+def get_all_trip_and_number_seat_by_date(request, format=None):
+    data = json.loads(json.dumps(request.data)) 
+    sql = "SELECT herokuapp_Trip.*, herokuapp_Train.total_seat, count(herokuapp_Ticket.trip_id) number_book FROM herokuapp_Trip"
+    sql = sql.strip() + " INNER JOIN herokuapp_Train ON herokuapp_Trip.train_id = herokuapp_Train.id"
+    sql = sql.strip() + " INNER JOIN herokuapp_Ticket ON herokuapp_Trip.id = herokuapp_Ticket.trip_id"
+    sql = sql.strip() + " WHERE herokuapp_Trip.start_date = '%s'" % (data['start_date'])
+    sql = sql.strip() + " GROUP BY herokuapp_Ticket.trip_id"
+    sql = sql.strip() + " ORDER BY start_time_train asc"  
+    return Response(executeQuery(sql))
 
 
 @api_view(['POST'])
