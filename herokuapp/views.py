@@ -845,7 +845,7 @@ def findDataCompany(request, format=None):
 @parser_classes((JSONParser,))
 # get data acengy of company
 def searchDataAgencyOfCompany(request, format=None):
-    return Response(serializers.serialize("json", models.Company.objects.filter(idParent=request.data['company'])))
+    return Response(serializers.serialize("json", models.Company.objects.filter(id_parent=request.data['company'])))
 
 
 # end Company
@@ -960,7 +960,7 @@ def findDataTrip(request, format=None):
 @parser_classes((JSONParser,))
 # find data trip by date
 def findDataTripByDate(request, format=None):
-    return Response(serializers.serialize("json", models.Trip.objects.filter(start_date=request.data['start_date']).order_by('start_time_train')))
+    return Response(serializers.serialize("json", models.Trip.objects.filter(type_ticket=request.data['type_ticket'], start_date=request.data['start_date']).order_by('start_time_train')))
 
 
 @api_view(['POST'])
@@ -1017,6 +1017,14 @@ def createDataTripFromExcel(request, format=None):
         obj.save()  
     
     return Response([{"id": obj.id, "result": "ok"}])
+
+
+@api_view(['GET'])
+@parser_classes((JSONParser,))
+# get all data from Trip
+def read_data_trip_pagination(request, format=None): 
+
+    return Response(serializers.serialize("json", models.Trip.objects.all().order_by('-id')))
 
 # end Trip
 # *********************************************

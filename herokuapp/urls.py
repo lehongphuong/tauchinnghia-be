@@ -130,6 +130,7 @@ urlpatterns = [
     path('findDataTripByDate', views.findDataTripByDate, name='findDataTripByDate'),
     path('get_all_trip_and_number_seat_by_date', views.get_all_trip_and_number_seat_by_date, name='get_all_trip_and_number_seat_by_date'),
     path('createDataTripFromExcel', views.createDataTripFromExcel, name='createDataTripFromExcel'),
+    path('read_data_trip_pagination', views.read_data_trip_pagination, name='read_data_trip_pagination'),
     # end Trip
     # *******************************************************
 
