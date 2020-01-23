@@ -39,7 +39,7 @@ class Trip(models.Model):
     train = models.ForeignKey(Train, on_delete=models.CASCADE)
     start_date = models.DateField()
     start_time_train = models.TimeField()
-    end_time_train = models.TimeField() 
+    end_time_train = models.TimeField()
     type_ticket = models.IntegerField(default=0)
     price_origin = models.FloatField(max_length=20)
     price = models.FloatField(max_length=20)
@@ -50,11 +50,11 @@ class Booking(models.Model):
     trip = models.ForeignKey(Trip, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     number_ticket = models.IntegerField(default=0)
-    coupon = models.CharField(max_length=10) 
+    coupon = models.CharField(max_length=10)
     payment_type = models.IntegerField(default=0)
     payment_status = models.IntegerField(default=0)
     start_date = models.DateField()
-        
+
 
 class Ticket(models.Model):
     id = models.AutoField
@@ -84,6 +84,7 @@ class Debt(models.Model):
     end_date = models.DateField()
     money = models.FloatField(max_length=20)
 
+
 class PayDebt(models.Model):
     id = models.AutoField
     company = models.ForeignKey(Company, on_delete=models.CASCADE)
@@ -91,6 +92,7 @@ class PayDebt(models.Model):
     start_date = models.DateField()
     money_spend = models.IntegerField(default=0)
     note = models.CharField(max_length=200)
+
 
 class PriceTicket(models.Model):
     id = models.AutoField
@@ -112,4 +114,4 @@ class Staff(models.Model):
 class Point(models.Model):
     id = models.AutoField
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    coin = models.IntegerField(default=0) 
+    coin = models.IntegerField(default=0)

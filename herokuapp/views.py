@@ -12,6 +12,7 @@ from rest_framework.parsers import JSONParser
 from rest_framework.response import Response
 from django.http import JsonResponse
 from django.core import serializers
+from django.core.paginator import Paginator
 import json
 
 from django.core.mail import send_mail
@@ -56,15 +57,15 @@ def executeQuery(sql):
 @parser_classes((JSONParser,))
 # get all data from User
 def sendMail(request, format=None):
-    data = json.loads(json.dumps(request.data)) 
+    data = json.loads(json.dumps(request.data))
     subject, from_email, to = 'Vé Tàu Lý Sơn - IziShip', 'Vé tàu Đảo Lý Sơn<vetaudaolyson@gmail.com>', data['to']
     text_content = 'Đây là tin nhắn quan trọng.'
     html_content = data['content']
     msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
     msg.attach_alternative(html_content, "text/html")
-    msg.send()  
+    msg.send()
     return Response([{"result": "ok"}])
- 
+
 # end User
 # *********************************************
 
@@ -78,7 +79,7 @@ def createDataUser(request, format=None):
     data = json.loads(json.dumps(request.data))
     # check user exists by phone or CMND
     phone = models.User.objects.filter(phone=data['phone'])
-    cmnd = models.User.objects.filter(cmnd=data['cmnd']) 
+    cmnd = models.User.objects.filter(cmnd=data['cmnd'])
 
     if phone.count() == 0 and cmnd.count() == 0:
         data['company'] = models.Company.objects.get(pk=data['company'])
@@ -96,17 +97,17 @@ def createDataUserBooking(request, format=None):
     data = json.loads(json.dumps(request.data))
     # check user exists by phone or CMND
     phone = models.User.objects.filter(phone=data['phone'])
-    cmnd = models.User.objects.filter(cmnd=data['cmnd'])  
+    cmnd = models.User.objects.filter(cmnd=data['cmnd'])
 
     if phone.count() == 0 and cmnd.count() == 0:
         data['company'] = models.Company.objects.get(pk=data['company'])
         obj = models.User(**data)
-        obj.save() 
+        obj.save()
         return Response([{"id": obj.id, "result": "ok"}])
 
     if cmnd.count() == 0:
-        cmnd = phone 
-        
+        cmnd = phone
+
     return Response([{"id": cmnd[0].pk, "result": "ok"}])
 
 
@@ -159,9 +160,9 @@ def searchDataUserOfCompany(request, format=None):
 @parser_classes((JSONParser,))
 # get all data from Booking
 def createDataBooking(request, format=None):
-    data = json.loads(json.dumps(request.data)) 
-    data['trip'] = models.Trip.objects.get(pk=data['trip']) 
-    data['user'] = models.User.objects.get(pk=data['user']) 
+    data = json.loads(json.dumps(request.data))
+    data['trip'] = models.Trip.objects.get(pk=data['trip'])
+    data['user'] = models.User.objects.get(pk=data['user'])
     obj = models.Booking(**data)
     obj.save()
     return Response([{"id": obj.id, "result": "ok"}])
@@ -179,7 +180,7 @@ def readDataBooking(request, format=None):
 # get update data from Booking
 def updateDataBooking(request, format=None):
     data = json.loads(json.dumps(request.data))
-    data['trip'] = models.Trip.objects.get(pk=data['trip']) 
+    data['trip'] = models.Trip.objects.get(pk=data['trip'])
     data['user'] = models.User.objects.get(pk=data['user'])
     models.Booking(**data).save()
     return Response({"result": "ok"})
@@ -245,14 +246,14 @@ def createDataTicketAuto(request, format=None):
     sql = sql.strip() + " AND start_date = '%s'" % (data[0]['start_date'])
     tickets_book = executeQuery(sql)
 
-    # loop in data ticket prepare insert 
+    # loop in data ticket prepare insert
     booked_list = [0]*total_seat
     # đánh dấu các ghế được book = 1
     for book in tickets_book:
         booked_list[book['number_seat']] = 1
-    
+
     ans = 1
-    for ticket in data: 
+    for ticket in data:
         for i in range(ans, total_seat):
             # nếu ghế chưa được đặt thì sẽ chọn ghế
             if(booked_list[i] == 0):
@@ -260,10 +261,10 @@ def createDataTicketAuto(request, format=None):
                 ticket['number_seat'] = i
                 break
 
-    # print(data) 
+    # print(data)
     id_tickets = []
-    for item in data: 
-        # check and update number_seat and insert ticket 
+    for item in data:
+        # check and update number_seat and insert ticket
         item['company'] = models.Company.objects.get(pk=item['company'])
         item['booking'] = models.Booking.objects.get(pk=item['booking'])
         item['trip'] = models.Trip.objects.get(pk=item['trip'])
@@ -272,10 +273,11 @@ def createDataTicketAuto(request, format=None):
         obj = models.Ticket(**item)
         obj.save()
 
-        # save id of ticket insert 
+        # save id of ticket insert
         id_tickets.append(obj.id)
 
-    return Response([{"id": id_tickets, "result": "ok"}]) 
+    return Response([{"id": id_tickets, "result": "ok"}])
+
 
 @api_view(['POST'])
 @parser_classes((JSONParser,))
@@ -304,7 +306,7 @@ def updateStatusDataTicket(request, format=None):
     data = json.loads(json.dumps(request.data))
     ticket = models.Ticket.objects.filter(pk=request.data['pk'])
     # vé đã thanh toán
-    ticket.update(status=3) 
+    ticket.update(status=3)
     return Response({"result": "ok"})
 
 
@@ -352,7 +354,7 @@ def searchDataTicketOfCompany(request, format=None):
 @api_view(['POST'])
 @parser_classes((JSONParser,))
 # get data Ticket of company
-def searchDataTicketByCondition(request, format=None): 
+def searchDataTicketByCondition(request, format=None):
     print(request.data)
     data = ""
     # ID
@@ -673,7 +675,7 @@ def updateDataTicketChangeManyTicket(request, format=None):
                 break
 
     return Response([{"result": "ok"}])
- 
+
 
 @api_view(['POST'])
 @parser_classes((JSONParser,))
@@ -925,7 +927,7 @@ def createDataTrip(request, format=None):
 @api_view(['POST'])
 @parser_classes((JSONParser,))
 # get all data from Trip
-def readDataTrip(request, format=None): 
+def readDataTrip(request, format=None):
     return Response(serializers.serialize("json", models.Trip.objects.all().order_by('-id')))
 
 
@@ -945,7 +947,7 @@ def deleteDataTrip(request, format=None):
     data = json.loads(json.dumps(request.data))
     data['company'] = models.Company.objects.get(pk=data['company'])
     data['train'] = models.Train.objects.get(pk=data['train'])
-    models.Trip(**data).delete() 
+    models.Trip(**data).delete()
     return Response({"result": "ok"})
 
 
@@ -967,13 +969,15 @@ def findDataTripByDate(request, format=None):
 @parser_classes((JSONParser,))
 # get all trip and number seat by date
 def get_all_trip_and_number_seat_by_date(request, format=None):
-    data = json.loads(json.dumps(request.data)) 
+    data = json.loads(json.dumps(request.data))
     sql = "SELECT herokuapp_Trip.*, herokuapp_Train.total_seat, count(herokuapp_Ticket.trip_id) number_book FROM herokuapp_Trip"
     sql = sql.strip() + " INNER JOIN herokuapp_Train ON herokuapp_Trip.train_id = herokuapp_Train.id"
-    sql = sql.strip() + " INNER JOIN herokuapp_Ticket ON herokuapp_Trip.id = herokuapp_Ticket.trip_id"
-    sql = sql.strip() + " WHERE herokuapp_Trip.start_date = '%s'" % (data['start_date'])
+    sql = sql.strip() + \
+        " INNER JOIN herokuapp_Ticket ON herokuapp_Trip.id = herokuapp_Ticket.trip_id"
+    sql = sql.strip() + \
+        " WHERE herokuapp_Trip.start_date = '%s'" % (data['start_date'])
     sql = sql.strip() + " GROUP BY herokuapp_Ticket.trip_id"
-    sql = sql.strip() + " ORDER BY start_time_train asc"  
+    sql = sql.strip() + " ORDER BY start_time_train asc"
     return Response(executeQuery(sql))
 
 
@@ -981,13 +985,15 @@ def get_all_trip_and_number_seat_by_date(request, format=None):
 @parser_classes((JSONParser,))
 # get all trip and number seat by date
 def get_all_trip_and_number_seat_by_date(request, format=None):
-    data = json.loads(json.dumps(request.data)) 
+    data = json.loads(json.dumps(request.data))
     sql = "SELECT herokuapp_Trip.*, herokuapp_Train.total_seat, count(herokuapp_Ticket.trip_id) number_book FROM herokuapp_Trip"
     sql = sql.strip() + " INNER JOIN herokuapp_Train ON herokuapp_Trip.train_id = herokuapp_Train.id"
-    sql = sql.strip() + " INNER JOIN herokuapp_Ticket ON herokuapp_Trip.id = herokuapp_Ticket.trip_id"
-    sql = sql.strip() + " WHERE herokuapp_Trip.start_date = '%s'" % (data['start_date'])
+    sql = sql.strip() + \
+        " INNER JOIN herokuapp_Ticket ON herokuapp_Trip.id = herokuapp_Ticket.trip_id"
+    sql = sql.strip() + \
+        " WHERE herokuapp_Trip.start_date = '%s'" % (data['start_date'])
     sql = sql.strip() + " GROUP BY herokuapp_Ticket.trip_id"
-    sql = sql.strip() + " ORDER BY start_time_train asc"  
+    sql = sql.strip() + " ORDER BY start_time_train asc"
     return Response(executeQuery(sql))
 
 
@@ -995,10 +1001,10 @@ def get_all_trip_and_number_seat_by_date(request, format=None):
 @parser_classes((JSONParser,))
 # get all data from Trip
 def createDataTripFromExcel(request, format=None):
-    data = json.loads(json.dumps(request.data))   
+    data = json.loads(json.dumps(request.data))
     trips = []
 
-    for i in range(1,len(data)):
+    for i in range(1, len(data)):
         trip = {}
         trip['company'] = 1
         trip['train'] = int(data[i][0])
@@ -1009,22 +1015,28 @@ def createDataTripFromExcel(request, format=None):
         trip['price_origin'] = data[i][5]
         trip['price'] = data[i][6]
         trips.append(trip)
- 
-    for trip in trips: 
+
+    for trip in trips:
         trip['company'] = models.Company.objects.get(pk=trip['company'])
-        trip['train'] = models.Train.objects.get(pk=trip['train']) 
+        trip['train'] = models.Train.objects.get(pk=trip['train'])
         obj = models.Trip(**trip)
-        obj.save()  
-    
+        obj.save()
+
     return Response([{"id": obj.id, "result": "ok"}])
 
 
-@api_view(['GET'])
+@api_view(['POST'])
 @parser_classes((JSONParser,))
 # get all data from Trip
-def read_data_trip_pagination(request, format=None): 
+def read_data_trip_pagination(request, format=None):
+    # get data request
+    data = json.loads(json.dumps(request.data))
 
-    return Response(serializers.serialize("json", models.Trip.objects.all().order_by('-id')))
+    trip_list = models.Trip.objects.all().order_by('-id')
+    paginator = Paginator(trip_list, data['page_size'])
+    page_number = data['page_index']
+    page_object = paginator.get_page(page_number)
+    return Response([{"count": paginator.count, "data": serializers.serialize("json", page_object)}])
 
 # end Trip
 # *********************************************
